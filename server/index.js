@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import userRouter from './routes/user.route.js';
 import authRouter from './routes/auth.route.js';
+import listingRouter from './routes/listing.route.js';
 import cookieParser from 'cookie-parser';
 dotenv.config();
 
@@ -24,6 +25,7 @@ app.listen(3000, () => {
 // Specifiy the routes we wish to use
 app.use("/server/user", userRouter);
 app.use("/server/auth", authRouter);
+app.use("/server/listing", listingRouter);
 
 // Error middleware
 // This middleware will be invoked every time the next() function is called in the controllers logic
