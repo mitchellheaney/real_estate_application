@@ -2,14 +2,47 @@ import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
 import { app } from '../firebase';
+import { updateUserStart, updateUserSuccess, updateUserFailure } from '../redux/user/userSlice';
+import { useDispatch } from 'react-redux';
 
 export default function Profile() {
 
-  const { currentUser } = useSelector((state) => state.user);
+  const { currentUser, loading, error } = useSelector((state) => state.user);
   const [file, setFile] = useState(undefined);
   const [filePerc, setFilePerc] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState({});
+  const [updateSuccess, setUpdateSuccess] = useState(false);
+  const dispatch = useDispatch();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      dispatch(updateUserStart());
+      
+      const res = await fetch(`/server/user/update/${currentUser._id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+      if (data.success === false) {
+        dispatch(updateUserFailure(data.message));
+        return;
+      }
+      dispatch(updateUserSuccess(data));
+      setUpdateSuccess(true);
+    } catch(err) {
+      dispatch(updateUserFailure(err.message));
+    }
+  };
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value })
+  };
 
   useEffect(() => {
     if (file) {
@@ -43,7 +76,7 @@ export default function Profile() {
   return (
     <div className='p-3 max-w-lg mx-auto'>
       <h1 className='text-3xl font-semibold text-center my-9'>Profile</h1>
-      <form className='flex flex-col gap-2'>
+      <form onSubmit={handleSubmit} className='flex flex-col gap-2'>
         <img className='rounded-full h-28 w-28 object-cover cursor-pointer self-center my-3' src={formData.avatar || currentUser.avatar} alt='Profile'/>
         <p className='text-sm self-center'>
           {fileUploadError ? (
@@ -58,16 +91,41 @@ export default function Profile() {
             ''
           )}
         </p>
-        <input onChange={ (e) => { setFile(e.target.files[0]) } } className='mb-2 text-sm' type='file' accept='image/*'/>
-        <input type='text' id='username' placeholder='Username' className='border p-3 rounded-lg' />
-        <input type='text' id='email' placeholder='Email' className='border p-3 rounded-lg' />
-        <input type='text' id='password' placeholder='Password' className='border p-3 rounded-lg' />
-        <button className='bg-slate-600 p-3 mt-2 rounded-lg text-white font-semibold transform transition duration-300 hover:scale-105 hover:bg-slate-500'>UPDATE</button>
+        <input onChange={ (e) => { setFile(e.target.files[0]) } }
+          className='mb-2 text-sm'
+          type='file'
+          accept='image/*'
+        />
+        <input type='text'
+          id='username'
+          placeholder='Username'
+          className='border p-3 rounded-lg'
+          defaultValue={currentUser.username}
+          onChange={handleChange}
+        />
+        <input type='text'
+          id='email'
+          placeholder='Email'
+          className='border p-3 rounded-lg'
+          defaultValue={currentUser.email}
+          onChange={handleChange}
+        />
+        <input type='password'
+          id='password'
+          placeholder='Password'
+          className='border p-3 rounded-lg'
+          onChange={handleChange}
+        />
+        <button disabled={loading} className='bg-slate-600 p-3 mt-2 rounded-lg text-white font-semibold transform transition duration-300 hover:scale-105 hover:bg-slate-500'>
+          {loading ? 'Loading...' : 'UPDATE'}
+        </button>
       </form>
       <div className='flex mt-3 justify-between'>
         <button className='bg-red-500 text-m p-2 mt-2 rounded-lg text-white transform transition duration-300 hover:scale-105 hover:bg-red-400'>Delete Account</button>
         <button className='bg-red-500 text-m p-2 mt-2 rounded-lg text-white transform transition duration-300 hover:scale-105 hover:bg-red-400'>Sign Out</button>
       </div>
+      <p className='text-red-600 mt-5'>{error ? error : ""}</p>
+      <p className='text-green-500'>{updateSuccess ? "User updated successfully." : ""}</p>
     </div>
   )
 }
