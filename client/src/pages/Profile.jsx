@@ -4,6 +4,7 @@ import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/
 import { app } from '../firebase';
 import { updateUserStart, updateUserSuccess, updateUserFailure, deleteUserFailure, deleteUserStart, deleteUserSuccess, signOutUserFailure, signOutUserStart, signOutUserSuccess } from '../redux/user/userSlice';
 import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 export default function Profile() {
 
@@ -110,7 +111,7 @@ export default function Profile() {
     <div className='p-3 max-w-lg mx-auto'>
       <h1 className='text-3xl font-semibold text-center my-9'>Profile</h1>
       <form onSubmit={handleSubmit} className='flex flex-col gap-2'>
-        <img className='rounded-full h-28 w-28 object-cover cursor-pointer self-center my-3' src={formData.avatar || currentUser.avatar} alt='Profile'/>
+        <img className='rounded-full h-28 w-28 object-cover cursor-pointer self-center my-3 hover:scale-150 transition duration-150' src={formData.avatar || currentUser.avatar} alt='Profile'/>
         <p className='text-sm self-center'>
           {fileUploadError ? (
             <span className='text-red-700'>
@@ -152,6 +153,7 @@ export default function Profile() {
         <button disabled={loading} className='bg-slate-600 p-3 mt-2 rounded-lg text-white font-semibold transform transition duration-300 hover:scale-105 hover:bg-slate-500'>
           {loading ? 'Loading...' : 'UPDATE'}
         </button>
+        <Link className='text-white bg-green-600 p-3 rounded-lg text-center font-semibold transition duration-300 hover:scale-105 hover:bg-green-500 hover:opacity-90' to={"/create-listing"}>CREATE LISTING</Link>
       </form>
       <div className='flex mt-3 justify-between'>
         <button onClick={handleDelete} className='bg-red-500 text-m p-2 mt-2 rounded-lg text-white transform transition duration-300 hover:scale-105 hover:bg-red-400'>Delete Account</button>

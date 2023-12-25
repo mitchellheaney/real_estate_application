@@ -8,6 +8,7 @@ import About from './pages/About';
 import Header from './components/Header';
 import { createTheme, ThemeProvider } from '@mui/material';
 import PrivateRoute from './components/PrivateRoute';
+import CreateListing from './pages/CreateListing';
 
 export default function () {
   return (
@@ -20,6 +21,7 @@ export default function () {
 				<Route path='/about' element={<About />} />
 				<Route element={<PrivateRoute />}>
 					<Route path='/profile' element={<Profile />} />
+					<Route path='/create-listing' element={<CreateListing/>} />
 				</Route>
 			</Routes>
 		</BrowserRouter>
