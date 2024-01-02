@@ -6,9 +6,10 @@ import SignUp from './pages/SignUp';
 import Profile from './pages/Profile';
 import About from './pages/About';
 import Header from './components/Header';
-import { createTheme, ThemeProvider } from '@mui/material';
 import PrivateRoute from './components/PrivateRoute';
 import CreateListing from './pages/CreateListing';
+import EditListing from './pages/EditListing';
+import Listing from './pages/Listing';
 
 export default function () {
   return (
@@ -19,9 +20,13 @@ export default function () {
 				<Route path='/sign-in' element={<SignIn />} />
 				<Route path='/sign-up' element={<SignUp />} />
 				<Route path='/about' element={<About />} />
+				<Route path='/listing/:listingId' element={<Listing />} />
+
+
 				<Route element={<PrivateRoute />}>
 					<Route path='/profile' element={<Profile />} />
 					<Route path='/create-listing' element={<CreateListing/>} />
+					<Route path='/edit-listing/:listingId' element={<EditListing/>} />
 				</Route>
 			</Routes>
 		</BrowserRouter>

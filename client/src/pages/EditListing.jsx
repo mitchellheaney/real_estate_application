@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
 import { app } from '../firebase.js';
-import { useNavigate} from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux';
 
-export default function CreateListing() {
+export default function EditListing() {
 
 	const [files, setFiles] = useState([]);
 	const [uploading, setUploading] = useState(false);
@@ -26,7 +26,20 @@ export default function CreateListing() {
 	const [error, setError] = useState(false);
 	const [loading, setLoading] = useState(false);
 	const navigate = useNavigate();
+	const params = useParams();
 	const {currentUser} = useSelector((state) => state.user);
+
+	useEffect( () => {
+		const fetchListing = async () => {
+			const listingId = params.listingId;
+			const res = await fetch(`/server/listing/get/${listingId}`);
+			const data = await res.json();
+			if (data.success === false) { console.log(data.message); }
+
+			setFormData(data);
+		};
+		fetchListing();
+	}, []);
 
 	const handleRemoveImage = (idx) => {
 		setFormData({
@@ -122,7 +135,7 @@ export default function CreateListing() {
 			setLoading(true);
 			setError(false);
 
-			const res = await fetch('/server/listing/create', {
+			const res = await fetch(`/server/listing/edit/${params.listingId}`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -149,7 +162,7 @@ export default function CreateListing() {
   return (
     <main className='p-3 max-w-4xl mx-auto'>
       <h1 className='text-3xl font-semibold text-center my-7'>
-        Create a Listing
+        Edit a Listing
       </h1>
       <form onSubmit={handleSubmit} className='flex flex-col sm:flex-row gap-6'>
         <div className='flex flex-col gap-4 flex-1'>
@@ -302,7 +315,7 @@ export default function CreateListing() {
             ))
 					}
 					<button disabled={loading || uploading} className='disabled:opacity-80 border p-3 bg-slate-700 text-white font-semibold rounded-lg transform transition duration-300 hover:scale-105 hover:shadow-lg hover:bg-slate-500'>
-						{loading ? 'Creating Listing...' : 'Create Listing'}
+						{loading ? 'Editing Listing...' : 'Edit Listing'}
 					</button>
 					{error && <p className='text-red-500'>{error}</p> }
 				</div>
