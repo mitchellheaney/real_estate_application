@@ -17,7 +17,7 @@ const userSchema = mongoose.Schema({
     },
     avatar: {
         type: String,
-        default: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
+        default: "https://firebasestorage.googleapis.com/v0/b/real-estate-app-mern.appspot.com/o/blank-profile-picture-973460_960_720.webp?alt=media&token=fcfcc630-e9cb-4a37-b1c3-759ac887451b",
     },
 }, {timestamps: true});
 
