@@ -10,5 +10,5 @@ EstateFinder is a web based application using the MERN stack (MongoDB, ExpressJS
 4. React
 
 ## How To Use?
-Click [here!](https://estatefinder.onrender.com/)
+Click [here!](https://estatefinder.onrender.com/)\
 <em>NOTE - When you press the link, please please please wait up to 30seconds due to the downtime from inactivity the deployment service forces. Thanks for you patience, hope you enjoy!</em>
