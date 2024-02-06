@@ -7,7 +7,9 @@ EstateFinder is a web based application using the MERN stack (MongoDB, ExpressJS
 1. Javascript (ExpressJS Router, Tailwind CSS)
 2. Node.js
 3. MongoDB (Document DB)
-4. React
+4. React (Redux)
+5. Firebase (Storage + OAuth)
+6. JWT (Auth)
 
 ## How To Use?
 Click [here!](https://estatefinder.onrender.com/)\
